@@ -1,16 +1,21 @@
 import type { Props } from "@/types";
-import Grid from "@mui/material/Unstable_Grid2";
+import Box from "@mui/material/Box";
 
 export const CenteredContainer = ({ children }: Props): JSX.Element => {
   return (
-    <Grid
-      container
-      direction="column"
-      spacing="0"
-      alignContent="center"
-      alignItems="center"
+    <Box
+      sx={{
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
     >
       {children}
-    </Grid>
+    </Box>
   );
 };

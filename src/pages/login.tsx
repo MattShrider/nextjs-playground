@@ -1,10 +1,11 @@
 import { CenteredContainer } from "@/components/CenteredContainer/CenteredContainer";
 import { makePage, pageLayouts } from "@/lib/makePage";
 import { LoginForm } from "@/components/LoginForm/LoginForm";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import Paper from "@mui/material/Paper";
 import { useUser } from "@/lib/auth/useUser";
 import { makeGetServerSidePropsRedirect } from "@/lib/auth/redirectSsr";
+import Typography from "@mui/material/Typography";
 
 export default makePage(
   () => {
@@ -14,8 +15,7 @@ export default makePage(
     });
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");
-    const onSubmit = (e: FormEvent) => {
-      e.preventDefault();
+    const onSubmit = () => {
       mutateLogin.mutate({
         username: email,
       });
@@ -23,7 +23,16 @@ export default makePage(
 
     return (
       <CenteredContainer>
-        <Paper variant="outlined">
+        <Paper
+          variant="outlined"
+          sx={{
+            padding: 3,
+            maxWidth: "md",
+          }}
+        >
+          <Typography variant="h5" component="h1" mb={2}>
+            Please log into the application to continue.
+          </Typography>
           <LoginForm
             onSubmit={onSubmit}
             email={email}
