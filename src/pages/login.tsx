@@ -1,5 +1,5 @@
 import { CenteredContainer } from "@/components/CenteredContainer/CenteredContainer";
-import { makePage, pageLayouts } from "@/lib/makePage";
+import { makePage } from "@/lib/makePage";
 import { LoginForm } from "@/components/LoginForm/LoginForm";
 import { useState } from "react";
 import Paper from "@mui/material/Paper";
@@ -8,7 +8,7 @@ import { makeGetServerSidePropsRedirect } from "@/lib/auth/redirectSsr";
 import Typography from "@mui/material/Typography";
 
 export default makePage(
-  () => {
+  function LoginPage() {
     const { mutateLogin } = useUser({
       redirectIfFound: true,
       redirectTo: "/",
@@ -45,8 +45,7 @@ export default makePage(
     );
   },
   {
-    layout: pageLayouts.fullscreen,
-    requireAuthentication: false,
+    hideAppBar: true,
   }
 );
 

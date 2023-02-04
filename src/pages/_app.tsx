@@ -13,11 +13,14 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 import { ReactQueryDevtools } from "react-query/devtools";
+import { AppBar } from "@/components/AppBar";
+import { PageWithMetadata } from "@/lib/makePage";
 
 const clientSideEmtionCache = createEmotionCache();
 
 interface MyAppProps extends AppProps {
   emotionCache?: EmotionCache;
+  Component: PageWithMetadata;
 }
 
 export default function App({
@@ -35,6 +38,7 @@ export default function App({
         <CssBaseline />
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
+            {!Component?.pageMetadata?.hideAppBar && <AppBar />}
             <Component {...pageProps} />
           </Hydrate>
         </QueryClientProvider>
