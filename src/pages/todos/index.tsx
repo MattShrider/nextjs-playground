@@ -3,7 +3,7 @@ import type { MyGetServerSideProps } from "@/types";
 import { Layout } from "@/components/Layout";
 import { NewTodo } from "@/components/NewTodo/NewTodo";
 import { makePage } from "@/lib/makePage";
-import { dehydrateUseTodos, useTodos } from "@/queries/useTodos";
+import { apiDehydrateUseTodos, useTodos } from "@/queries/useTodos";
 import Spinner from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 
@@ -43,7 +43,7 @@ export default makePage(function NewTodoPage() {
 });
 
 export const getServerSideProps: MyGetServerSideProps = async (context) => {
-  const dehydratedState = await dehydrateUseTodos();
+  const dehydratedState = await apiDehydrateUseTodos();
   return {
     props: {
       dehydratedState: dehydratedState,
