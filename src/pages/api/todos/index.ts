@@ -1,42 +1,54 @@
+/* eslint-disable indent */
+import { dbCreateTodo, dbGetTodos, TodoResult } from "@/external/todos";
 import {
   ActionResult,
   ActionResult500,
   make200,
+  make400,
+  make404,
   make500,
 } from "@/http/responses";
-import { supabaseClient } from "@/lib/supabase";
 import { NextApiHandler } from "next";
-
-export interface Todo {
-  id: number; //bigint
-  title: string;
-  is_complete: boolean;
-  created_at: Date;
-}
-
-export interface TodoResult {
-  count: number;
-  todos: Todo[];
-}
-
-export const apiFetchTodos = async (): Promise<TodoResult> => {
-  return supabaseClient
-    .from("todos")
-    .select("*")
-    .then(({ data = [], error, count }) => {
-      if (error) throw error;
-      return { todos: data || [], count: (count || data?.length) ?? 0 };
-    });
-};
 
 const apiGetTodos: NextApiHandler<ActionResult> = async (req, res) => {
   try {
-    const { count, todos } = await apiFetchTodos();
-    return make200<TodoResult>(res, { count: count || 0, todos });
+    return make200(res, await dbGetTodos());
   } catch (e) {
+    console.error(e);
     return make500(res, "An error occurred when fetching todos");
   }
 };
 
+export interface PostTodoBody {
+  title: string;
+}
+const apiPostTodos: NextApiHandler<ActionResult> = async (req, res) => {
+  const body: PostTodoBody = req.body;
+  if (!body?.title) {
+    return make400(
+      res,
+      `POST todos requires a body in the format of {"title": string}`
+    );
+  }
+
+  try {
+    return make200(res, await dbCreateTodo(body.title));
+  } catch (e) {
+    console.error(e);
+    return make500(res, "An error occurred when creating todo");
+  }
+};
+
+const apiTodoRouter: NextApiHandler<ActionResult> = async (req, res) => {
+  switch (req.method) {
+    case "GET":
+      return apiGetTodos(req, res);
+    case "POST":
+      return apiPostTodos(req, res);
+    default:
+      return make404(res);
+  }
+};
+
 export type GetTodosResponse = ActionResult<TodoResult> | ActionResult500;
-export default apiGetTodos;
+export default apiTodoRouter;

@@ -1,13 +1,13 @@
 import type { FormEvent, ChangeEvent } from "react";
 import { useState } from "react";
-import { useMutateTodos } from "@/queries/useTodos";
+import { useInsertTodoMutator } from "@/queries/useTodos";
 import TextField from "@mui/material/TextField";
 
 export interface NewTodoProps {}
 
 export function NewTodo(props: NewTodoProps) {
   const [title, setTitle] = useState("");
-  const mutator = useMutateTodos();
+  const mutator = useInsertTodoMutator();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -23,6 +23,7 @@ export function NewTodo(props: NewTodoProps) {
   return (
     <form onSubmit={handleSubmit}>
       <TextField
+        fullWidth
         value={title}
         onChange={handleChange}
         error={mutator.isError}

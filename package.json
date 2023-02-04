@@ -12,7 +12,10 @@
     "vercel:logout": "npx vercel login",
     "vercel:link": "npx vercel link",
     "vercel:env:pull": "npx vercel env pull .env.local",
-    "vercel:logs": "npx vercel logs"
+    "vercel:logs": "npx vercel logs",
+    "supabase:login": "npx supabase login",
+    "supabase:start": "npx supabase start",
+    "supabase:types": "npx supbase gen types typescript --local src/external/supabase.types.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",

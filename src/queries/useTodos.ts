@@ -1,4 +1,5 @@
-import { supabaseClient } from "@/lib/supabase";
+import type { ApiUpdateTodoBody } from "@/pages/api/todos/[tid]";
+
 import axios from "axios";
 import {
   dehydrate,
@@ -8,35 +9,33 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "react-query";
-import { apiFetchTodos, GetTodosResponse, TodoResult } from "@/pages/api/todos";
+import { GetTodosResponse, PostTodoBody } from "@/pages/api/todos";
+import { dbGetTodos, TodoResult } from "@/external/todos";
 
 type TodoState = TodoResult;
 
 export const GET_TODOS_KEY = "todos";
 
-const fetchTodos = async (): Promise<TodoState> =>
-  axios.get<GetTodosResponse>("/api/todos").then(({ data }) => {
-    if (data.status === "success") {
-      return {
-        todos: data.result?.todos ?? [],
-        count: data.result?.count ?? 0,
-      };
-    }
-    console.error("Fetch Error", data);
-    throw data.message;
-  });
-
 export const useTodos = (): UseQueryResult<TodoState> => {
-  return useQuery(GET_TODOS_KEY, fetchTodos);
+  return useQuery(GET_TODOS_KEY, async () =>
+    axios.get<GetTodosResponse>("/api/todos").then(({ data }) => {
+      if (data.status === "success") {
+        return {
+          todos: data.result?.todos ?? [],
+          count: data.result?.count ?? 0,
+        };
+      }
+      console.error("Fetch Error", data);
+      throw data.message;
+    })
+  );
 };
 
-export const useMutateTodos = () => {
+export const useInsertTodoMutator = () => {
   const queryClient = useQueryClient();
   return useMutation(
-    "todos",
-    async (title: string) => {
-      await supabaseClient.from("todos").insert({ title });
-    },
+    "insertTodo",
+    async (title: string) => axios.post<PostTodoBody>("/api/todos", { title }),
     {
       onSuccess(data, variables, context) {
         queryClient.invalidateQueries(GET_TODOS_KEY);
@@ -48,9 +47,43 @@ export const useMutateTodos = () => {
   );
 };
 
+export const useDeleteTodoMutator = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    "deleteTodo",
+    async (todoId: number) => axios.delete(`/api/todos/${todoId}`),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(GET_TODOS_KEY);
+      },
+    }
+  );
+};
+
+interface UseUpdateTodoParams {
+  id: number;
+  is_complete: boolean;
+}
+export const useUpdateTodoMutator = () => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    "updateTodo",
+    async ({ id, is_complete }: UseUpdateTodoParams) => {
+      return axios.patch<ApiUpdateTodoBody>(`/api/todos/${id}`, {
+        is_complete,
+      });
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(GET_TODOS_KEY);
+      },
+    }
+  );
+};
+
 export const apiDehydrateUseTodos = async () => {
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery<TodoState>(GET_TODOS_KEY, apiFetchTodos);
+  await queryClient.prefetchQuery<TodoState>(GET_TODOS_KEY, dbGetTodos);
 
   return dehydrate(queryClient);
 };
