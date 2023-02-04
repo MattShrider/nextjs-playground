@@ -1,6 +1,10 @@
+import type { GetServerSideProps } from "next/types";
+import type { MyAppProps } from "@/types";
+import type { AppProps } from "next/app";
+import { ReactQueryDevtools } from "react-query/devtools";
+
 import "@/styles/globals.css";
 import React from "react";
-import type { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider, Hydrate } from "react-query";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import Head from "next/head";
@@ -11,17 +15,9 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-
-import { ReactQueryDevtools } from "react-query/devtools";
 import { AppBar } from "@/components/AppBar";
-import { PageWithMetadata } from "@/lib/makePage";
 
 const clientSideEmtionCache = createEmotionCache();
-
-interface MyAppProps extends AppProps {
-  emotionCache?: EmotionCache;
-  Component: PageWithMetadata;
-}
 
 export default function App({
   Component,
@@ -29,6 +25,9 @@ export default function App({
   emotionCache = clientSideEmtionCache,
 }: MyAppProps) {
   const [queryClient] = React.useState(() => new QueryClient());
+  if (pageProps.dehydratedState) {
+    console.log("Dehydrated state", pageProps.dehydratedState);
+  }
   return (
     <CacheProvider value={emotionCache}>
       <Head>

@@ -1,20 +1,5 @@
+import type { PageMetadata, MakePageOptions, PageWithMetadata } from "@/types";
 import type { NextPageContext, NextComponentType } from "next";
-
-export interface PageMetadata {
-  hideAppBar: boolean;
-}
-
-export interface MakePageOptions {
-  hideAppBar?: boolean;
-}
-
-export type PageWithMetadata<PropTypes = any> = NextComponentType<
-  NextPageContext,
-  any,
-  PropTypes
-> & {
-  pageMetadata?: PageMetadata;
-};
 
 export const pageDefaults: PageMetadata = {
   hideAppBar: false,

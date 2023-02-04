@@ -10,8 +10,7 @@ import Typography from "@mui/material/Typography";
 export default makePage(
   function LoginPage() {
     const { mutateLogin } = useUser({
-      redirectIfFound: true,
-      redirectTo: "/",
+      redirectWhenLoggedIn: "/",
     });
     const [email, setEmail] = useState("");
     const [pass, setPass] = useState("");

@@ -5,12 +5,17 @@ import Menu from "@mui/material/Menu";
 import React from "react";
 import { useUser } from "@/lib/auth/useUser";
 import Router from "next/router";
+import Button from "@mui/material/Button";
 
 export interface ProfileButtonProps {}
 
 export function ProfileButton(props: ProfileButtonProps) {
-  const { user, mutateLogout } = useUser({ redirectTo: "/" });
+  const { user, mutateLogout } = useUser({
+    redirectOnLogout: "/",
+  });
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  if (!user) return null;
 
   const logout = () => {
     closeMenu();
@@ -29,8 +34,8 @@ export function ProfileButton(props: ProfileButtonProps) {
     setAnchorEl(null);
   };
 
-  return (
-    <div>
+  const content: React.ReactNode = user?.isLoggedIn ? (
+    <>
       <IconButton
         size="large"
         aria-label="account of current user"
@@ -56,9 +61,14 @@ export function ProfileButton(props: ProfileButtonProps) {
         open={Boolean(anchorEl)}
         onClose={closeMenu}
       >
-        {user?.isLoggedIn && <MenuItem onClick={logout}>Logout</MenuItem>}
-        {!user?.isLoggedIn && <MenuItem onClick={login}>Login</MenuItem>}
+        <MenuItem onClick={logout}>Logout</MenuItem>
       </Menu>
-    </div>
+    </>
+  ) : (
+    <Button color="secondary" variant="contained" onClick={login}>
+      Login
+    </Button>
   );
+
+  return <div>{content}</div>;
 }

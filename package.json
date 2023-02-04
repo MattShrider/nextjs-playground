@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel": "npx vercel help",
+    "vercel:login": "npx vercel login",
+    "vercel:logout": "npx vercel login",
+    "vercel:link": "npx vercel link",
+    "vercel:env:pull": "npx vercel env pull .env.local",
+    "vercel:logs": "npx vercel logs"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
@@ -16,6 +22,7 @@
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.6",
     "@next/font": "13.1.6",
+    "@supabase/supabase-js": "^2.7.0",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",

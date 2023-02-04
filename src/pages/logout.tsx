@@ -5,7 +5,7 @@ import { makePage } from "@/lib/makePage";
 import Button from "@mui/material/Button";
 
 export default makePage(() => {
-  const { mutateLogout } = useUser({ redirectTo: "/", redirectIfFound: false });
+  const { mutateLogout } = useUser({ redirectWhenLoggedOut: "/" });
   const logout = () => mutateLogout.mutate();
   return (
     <CenteredContainer>
