@@ -1,7 +1,9 @@
-import type { Props } from "@/types";
 import Box from "@mui/material/Box";
+import type { PropsWithChildren } from "react";
 
-export const CenteredContainer = ({ children }: Props): JSX.Element => {
+export const CenteredContainer = ({
+  children,
+}: PropsWithChildren): JSX.Element => {
   return (
     <Box
       sx={{
