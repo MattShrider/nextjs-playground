@@ -6,9 +6,10 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Delete from "@mui/icons-material/Delete";
+import { TodoWithPending } from "@/queries/useTodos";
 
 export interface TodoListProps {
-  todos: Todo[];
+  todos: TodoWithPending[];
   onDelete: (todo: Todo) => void;
   onCheck: (todo: Todo) => void;
 }
@@ -20,35 +21,44 @@ export function TodoList({
 }: TodoListProps): JSX.Element {
   return (
     <List>
-      {todos.map((todo) => (
-        <ListItem
-          key={todo.id}
-          secondaryAction={
-            <IconButton
-              edge="end"
-              aria-label={`Delete ${todo.title}`}
-              onClick={() => onDelete(todo)}
+      {todos.map((todo) => {
+        return (
+          <ListItem
+            disabled={todo.__pending}
+            key={todo.id}
+            secondaryAction={
+              <IconButton
+                edge="end"
+                disabled={todo.__pending}
+                aria-label={`Delete ${todo.title}`}
+                onClick={() => onDelete(todo)}
+              >
+                <Delete />
+              </IconButton>
+            }
+          >
+            <ListItemButton
+              role={undefined}
+              onClick={() => onCheck(todo)}
+              disabled={todo.__pending}
+              dense
             >
-              <Delete />
-            </IconButton>
-          }
-        >
-          <ListItemButton role={undefined} onClick={() => onCheck(todo)} dense>
-            <ListItemIcon>
-              <Checkbox
-                edge="start"
-                checked={todo.is_complete}
-                tabIndex={-1}
-                disableRipple
-                inputProps={{
-                  "aria-labelledby": `checkbox-list-label-${todo.title}`,
-                }}
-              />
-            </ListItemIcon>
-            {todo.title}
-          </ListItemButton>
-        </ListItem>
-      ))}
+              <ListItemIcon>
+                <Checkbox
+                  edge="start"
+                  checked={todo.is_complete}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{
+                    "aria-labelledby": `checkbox-list-label-${todo.title}`,
+                  }}
+                />
+              </ListItemIcon>
+              {todo.title}
+            </ListItemButton>
+          </ListItem>
+        );
+      })}
     </List>
   );
 }

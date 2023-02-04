@@ -22,6 +22,7 @@ export default makePage(function NewTodoPage() {
   const handleDelete = (todo: Todo) => {
     deleteTodoMutator.mutate(todo.id);
   };
+
   const handleIsComplete = ({ id, is_complete }: Todo) => {
     updateTodoMutator.mutate({ id, is_complete: !is_complete });
   };

@@ -28,7 +28,6 @@ export function NewTodo(props: NewTodoProps) {
         onChange={handleChange}
         error={mutator.isError}
         helperText={mutator.error as string}
-        disabled={mutator.isLoading}
         label="Todo Title"
       />
     </form>

@@ -35,27 +35,29 @@ export async function dbCreateTodo(title: Todo["title"]): Promise<Todo> {
     });
 }
 
-export async function dbDeleteTodo(id: Todo["id"]): Promise<null> {
+export async function dbDeleteTodo(id: Todo["id"]): Promise<Todo | null> {
   return supabaseClient
     .from("todos")
     .delete()
     .eq("id", id)
-    .then(({ error }) => {
+    .select()
+    .then(({ error, data }) => {
       if (error) throw error;
-      return null;
+      return data?.[0];
     });
 }
 
 export async function dbUpdateTodo(
   id: Todo["id"],
   is_complete: boolean
-): Promise<null> {
+): Promise<Todo | null> {
   return supabaseClient
     .from("todos")
     .update({ is_complete })
     .eq("id", id)
-    .then(({ error }) => {
+    .select()
+    .then(({ error, data }) => {
       if (error) throw error;
-      return null;
+      return data?.[0];
     });
 }
