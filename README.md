@@ -1,16 +1,23 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Initial setup required
+## Getting Started
 This application is deployed with vercel integrated with Supabase. That means unless you have a similar setup,
 local installation will be difficult.
 
-
-Session auth requires a `.env.local` file with the following keys
-```.env
-SECRET_COOKIE_PASSWORD = <your-unique-password-32-chars-long>
+First, install packages
+```bash
+npm install
 ```
 
-## Getting Started
+Session auth requires a `.env.local` file generated from vercel
+```bash
+# Login to vercel
+npm run vercel:login
+# Link your local instance to vercel runtime
+npm run vercel:link
+# Pull env vars to `.env.local`
+npm run vercel:env:pull
+```
 
 First, run the development server:
 
@@ -24,16 +31,19 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Filestructure
+Each folder within `src/` should contain a `README.md` explaining what it is for. The exception to this is the `src/pages/` folder, due to each file automatically generating a browser or api route by next-js.
+
 
 ## How to fork the infrastructure
 - Fork this repo
 - Create a vercel project
-- Import the repo with vercel import (I used Github)
+- Import the repo with vercel import tool from Github
 - [Create a supabase integration with vercel](https://supabase.com/docs/guides/integrations/vercel)
 - Login to vercel with `npm run vercel:login`
 - Link your local version with vercel `npm run vercel:link`
 - Pull env vars with `npm run vercel:env:pull`
-  - This will create a `.env.local` file that SHOULD NEVER be checked into git history
+  - This will create a `.env.local` file that **SHOULD NEVER** be checked into git history
 
 ## To Generate types
 Supabase can automatically [generate types directly from a prod instance.](https://supabase.com/docs/guides/api/generating-types) This means we don't have to keep updates by hand.
