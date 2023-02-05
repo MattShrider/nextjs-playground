@@ -1,40 +1,47 @@
-import type { MyGetServerSideProps } from "@/types";
+import type { MyGetServerSideProps } from "@/types/types";
+import type { TodoRow } from "@/types/types";
 
 import { Layout } from "@/components/Layout";
 import { NewTodo } from "@/components/NewTodo/NewTodo";
 import { makePage } from "@/lib/makePage";
 import {
   apiDehydrateUseTodos,
+  GET_TODOS_KEY,
   useDeleteTodoMutator,
   useTodos,
   useUpdateTodoMutator,
 } from "@/queries/useTodos";
 import Spinner from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
-import { Todo } from "@/external/todos";
 import { TodoList } from "@/components/TodoList/TodoList";
+import { TodoModel } from "@/models/Todo";
 
 export default makePage(function NewTodoPage() {
   const { data, error } = useTodos();
   const deleteTodoMutator = useDeleteTodoMutator();
   const updateTodoMutator = useUpdateTodoMutator();
 
-  const handleDelete = (todo: Todo) => {
-    deleteTodoMutator.mutate(todo.id);
+  const handleDelete = (todo: TodoModel) => {
+    deleteTodoMutator.mutate(todo.idNotNull());
   };
 
-  const handleIsComplete = ({ id, is_complete }: Todo) => {
-    updateTodoMutator.mutate({ id, is_complete: !is_complete });
+  const handleIsComplete = (todo: TodoModel) => {
+    if (!todo.id()) return;
+    todo.setComplete(!todo.is_complete());
+    updateTodoMutator.mutate({
+      id: todo.id() as number,
+      is_complete: todo.is_complete(),
+    });
   };
 
   let content: React.ReactNode = "";
 
-  if (data?.todos) {
+  if (data) {
     content = (
       <>
         <NewTodo />
         <TodoList
-          todos={data.todos}
+          todos={data}
           onDelete={handleDelete}
           onCheck={handleIsComplete}
         />
@@ -66,6 +73,7 @@ export const getServerSideProps: MyGetServerSideProps = async (context) => {
   return {
     props: {
       dehydratedState: dehydratedState,
+      stateDeserializer: GET_TODOS_KEY,
     },
   };
 };

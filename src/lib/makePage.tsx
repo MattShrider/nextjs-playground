@@ -1,4 +1,8 @@
-import type { PageMetadata, MakePageOptions, PageWithMetadata } from "@/types";
+import type {
+  PageMetadata,
+  MakePageOptions,
+  PageWithMetadata,
+} from "@/types/types";
 import type { NextPageContext, NextComponentType } from "next";
 
 export const pageDefaults: PageMetadata = {

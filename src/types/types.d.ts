@@ -1,4 +1,9 @@
-import { GetServerSideProps } from "next";
+import type { Database } from "./supabase.types";
+import type { GetServerSideProps } from "next";
+import { DehydratedState } from "react-query";
+
+export type TodoRow = Database["public"]["Tables"]["todos"]["Row"];
+export type TodoInsert = Database["public"]["Tables"]["todos"]["Insert"];
 
 export interface PageMetadata {
   hideAppBar: boolean;
@@ -17,7 +22,8 @@ export type PageWithMetadata<PropTypes = any> = NextComponentType<
 };
 
 export interface MyPageProps {
-  dehydratedState?: unknown;
+  dehydratedState?: DehydratedState;
+  stateDeserializer?: string;
 }
 
 export interface MyAppProps extends AppProps {
