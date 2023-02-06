@@ -1,4 +1,3 @@
-import type { TodoRow } from "@/types/types";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -10,15 +9,27 @@ import { TodoListModel, TodoModel } from "@/models/Todo";
 
 export interface TodoListProps {
   todos: TodoListModel;
+  disableUpdate: boolean;
   onDelete: (todo: TodoModel) => void;
   onCheck: (todo: TodoModel) => void;
 }
 
 export function TodoList({
   todos,
+  disableUpdate,
   onDelete,
   onCheck,
 }: TodoListProps): JSX.Element {
+  const handleCheck = (todo: TodoModel) => {
+    if (disableUpdate) return;
+    onCheck(todo);
+  };
+
+  const handleDelete = (todo: TodoModel) => {
+    if (disableUpdate) return;
+    onDelete(todo);
+  };
+
   return (
     <List>
       {todos.list().map((todo) => {
@@ -29,9 +40,9 @@ export function TodoList({
             secondaryAction={
               <IconButton
                 edge="end"
-                disabled={todo.isPending()}
+                disabled={disableUpdate || todo.isPending()}
                 aria-label={`Delete ${todo.title()}`}
-                onClick={() => onDelete(todo)}
+                onClick={() => handleDelete(todo)}
               >
                 <Delete />
               </IconButton>
@@ -39,8 +50,9 @@ export function TodoList({
           >
             <ListItemButton
               role={undefined}
-              onClick={() => onCheck(todo)}
+              onClick={() => handleCheck(todo)}
               disabled={todo.isPending()}
+              disableRipple={disableUpdate}
               dense
             >
               <>
@@ -48,6 +60,7 @@ export function TodoList({
                   <Checkbox
                     edge="start"
                     checked={todo.is_complete()}
+                    disabled={disableUpdate}
                     tabIndex={-1}
                     disableRipple
                     inputProps={{

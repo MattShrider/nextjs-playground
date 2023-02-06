@@ -1,8 +1,9 @@
 import { Layout } from "@/components/Layout";
 import Typography from "@mui/material/Typography";
 import { Link } from "@/components/Link";
+import { makePage } from "@/lib/makePage";
 
-export default function Root() {
+export default makePage(function Root() {
   return (
     <Layout>
       <Typography>
@@ -20,4 +21,4 @@ export default function Root() {
       </Typography>
     </Layout>
   );
-}
+});

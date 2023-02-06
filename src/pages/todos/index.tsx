@@ -15,9 +15,12 @@ import Spinner from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import { TodoList } from "@/components/TodoList/TodoList";
 import { TodoModel } from "@/models/Todo";
+import { withAuthServerSideProps } from "@/lib/supabase";
+import { useUser } from "@/queries/useUser";
 
 export default makePage(function NewTodoPage() {
-  const { data, error } = useTodos();
+  const { data: user } = useUser();
+  const { data: todoList, error } = useTodos();
   const deleteTodoMutator = useDeleteTodoMutator();
   const updateTodoMutator = useUpdateTodoMutator();
 
@@ -36,12 +39,13 @@ export default makePage(function NewTodoPage() {
 
   let content: React.ReactNode = "";
 
-  if (data) {
+  if (todoList) {
     content = (
       <>
         <NewTodo />
         <TodoList
-          todos={data}
+          disableUpdate={!user}
+          todos={todoList}
           onDelete={handleDelete}
           onCheck={handleIsComplete}
         />
@@ -68,12 +72,21 @@ export default makePage(function NewTodoPage() {
   return <Layout>{content}</Layout>;
 });
 
-export const getServerSideProps: MyGetServerSideProps = async (context) => {
-  const dehydratedState = await apiDehydrateUseTodos();
-  return {
-    props: {
-      dehydratedState: dehydratedState,
-      stateDeserializer: GET_TODOS_KEY,
-    },
-  };
-};
+export const getServerSideProps = withAuthServerSideProps(
+  async (context) => {
+    const dehydratedState = await apiDehydrateUseTodos();
+    console.log(
+      "custom context",
+      // @ts-expect-error
+      context.req.custom
+    );
+
+    return {
+      props: {
+        dehydratedState: dehydratedState,
+        stateDeserializer: GET_TODOS_KEY,
+      },
+    };
+  },
+  { redirectWhenNoSession: null }
+);
