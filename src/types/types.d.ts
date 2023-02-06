@@ -1,6 +1,8 @@
 import type { Database } from "./supabase.types";
 import type { GetServerSideProps } from "next";
-import { DehydratedState } from "react-query";
+import type { DehydratedState } from "react-query";
+import type { Session } from "@supabase/supabase-js";
+import { ParsedUrlQuery } from "querystring";
 
 export type TodoRow = Database["public"]["Tables"]["todos"]["Row"];
 export type TodoInsert = Database["public"]["Tables"]["todos"]["Insert"];
@@ -24,6 +26,8 @@ export type PageWithMetadata<PropTypes = any> = NextComponentType<
 export interface MyPageProps {
   dehydratedState?: DehydratedState;
   stateDeserializer?: string;
+  initialSession?: Session | undefined | null;
+  user?: User | null;
 }
 
 export interface MyAppProps extends AppProps {
@@ -32,4 +36,9 @@ export interface MyAppProps extends AppProps {
   pageProps: MyPageProps;
 }
 
-export type MyGetServerSideProps = GetServerSideProps<MyPageProps>;
+export type MyGetServerSideProps<
+  PageProps = MyPageProps,
+  QueryParams = ParsedUrlQuery
+> = GetServerSideProps<PageProps, QueryParams>;
+
+export type User = Session["user"];

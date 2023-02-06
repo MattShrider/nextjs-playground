@@ -3,19 +3,20 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import React from "react";
-import { useUser } from "@/lib/auth/useUser";
-import Router from "next/router";
 import Button from "@mui/material/Button";
+
+import { useSignOut, useUser } from "@/queries/useUser";
+import { useRouter } from "next/router";
 
 export interface ProfileButtonProps {}
 
 export function ProfileButton(props: ProfileButtonProps) {
-  const { user, mutateLogout } = useUser({
-    redirectOnLogout: "/",
-  });
+  const router = useRouter();
+  const { data: user, isLoading } = useUser();
+  const mutateLogout = useSignOut();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  if (!user) return null;
+  if (!user && isLoading) return null;
 
   const logout = () => {
     closeMenu();
@@ -23,7 +24,7 @@ export function ProfileButton(props: ProfileButtonProps) {
   };
   const login = () => {
     closeMenu();
-    Router.push("/login");
+    router.push("/login");
   };
 
   const openMenu = (evt: React.MouseEvent<HTMLElement>) => {
@@ -34,7 +35,7 @@ export function ProfileButton(props: ProfileButtonProps) {
     setAnchorEl(null);
   };
 
-  const content: React.ReactNode = user?.isLoggedIn ? (
+  const content: React.ReactNode = user ? (
     <>
       <IconButton
         size="large"
