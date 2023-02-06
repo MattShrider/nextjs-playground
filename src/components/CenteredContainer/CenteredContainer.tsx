@@ -6,6 +6,7 @@ export const CenteredContainer = ({
 }: PropsWithChildren): JSX.Element => {
   return (
     <Box
+      bgcolor="#fafafa"
       sx={{
         position: "absolute",
         top: 0,

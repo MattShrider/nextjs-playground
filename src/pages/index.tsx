@@ -7,15 +7,11 @@ export default makePage(function Root() {
   return (
     <Layout>
       <Typography>
-        This is a test site that currently contains mock authorization, and a
-        responsive AppBar. It is deployed with Vercel.
+        This is a test site to play around with next-js, and of course it is a
+        good ol' todo app. The application authorizes and stores data with
+        supabase-js.
       </Typography>
-      <Typography>
-        On the login page, any username and password will pass and &quot;log you
-        in&quot; as that email. Note that there is no database or persistant
-        storage yet, and no data is saved about the user.
-      </Typography>
-      <Typography>
+      <Typography sx={{ marginTop: 2 }}>
         Try visiting the <Link href="/todos">Todos Page</Link> to load
         collections from supabase-js
       </Typography>

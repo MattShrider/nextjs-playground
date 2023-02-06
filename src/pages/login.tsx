@@ -4,6 +4,7 @@ import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 import { getServerSideAuthProps, supabaseClient } from "@/lib/supabase";
 import { makePage } from "@/lib/makePage";
 import { useUser } from "@/queries/useUser";
+import Alert from "@mui/material/Alert";
 
 export default makePage(
   () => {
@@ -17,6 +18,10 @@ export default makePage(
             maxWidth: "md",
           }}
         >
+          <Alert color="warning">
+            Login is currently broken. Your username and password <b>WILL</b> be
+            stored but your session will not authenticate.
+          </Alert>
           <Auth
             supabaseClient={supabaseClient}
             appearance={{ theme: ThemeSupa }}
